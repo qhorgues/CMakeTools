@@ -8,10 +8,11 @@ function(set_target_warnings target)
     
     if ((${CMAKE_BUILD_TYPE} MATCHES "Debug") OR (${CMAKE_BUILD_TYPE} MATCHES "RelWithDebInfo"))
         if (${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-            add_compile_options(-fsanitize=address)
-            add_link_options(-fsanitize=address)
+            set (SANITIZE -fsanitize=address)
+            target_link_options(${target} PUBLIC -fsanitize=address)
         elseif (MSVC)
             set (SANITIZE /fsanitize=address)
+			target_link_options(${target} PUBLIC /INCREMENTAL:NO)
         endif ()
     endif ()
 
