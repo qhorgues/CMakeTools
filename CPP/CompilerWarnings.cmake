@@ -13,7 +13,7 @@ function(set_target_warnings target)
         elseif (MSVC)
             set (SANITIZE /fsanitize=address)
 			target_link_options(${target} PUBLIC /INCREMENTAL:NO)
-            target_compile_options(${target} /MTd)
+            target_compile_options(${target} PUBLIC /MTd)
         endif ()
     endif ()
 
