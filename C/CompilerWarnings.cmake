@@ -13,26 +13,28 @@ function(set_target_warnings target)
             set (CMAKE_C_FLAGS_DEBUG -g -O2)
         endif (NOT MSVC)
 
-            if (ENEABLE_SANITIZER)
-                if (MSVC)
-                set(SANITIZE /fsanitize=address /analyse)
-            else()
+		if (ENEABLE_SANITIZER)
+			if (MSVC)
+				set(SANITIZE /fsanitize=address /analyse)
+			else()
 
-                set(SANITIZE 
-                    -fsanitize=address
-                    -fsanitize=pointer-compare
-                    -fsanitize=pointer-substract
-                    -fsanitize=leak
-                    -fsanitize=no-omit-frame-pointer
-                    -fsanitize=undefined
-                    -fsanitize=bounds-strict
-                    -fsanitize=float-divide-by-zero
-                    -fsanitize=float-cast-overflow
-                    -fanalyser
-                )
+				set(SANITIZE 
+					-fsanitize=address
+					-fsanitize=pointer-compare
+					-fsanitize=pointer-substract
+					-fsanitize=leak
+					-fsanitize=no-omit-frame-pointer
+					-fsanitize=undefined
+					-fsanitize=bounds-strict
+					-fsanitize=float-divide-by-zero
+					-fsanitize=float-cast-overflow
+					-fanalyser
+				)
 
-                    add_link_options(-fsanitize=address)
-        endif (ENEABLE_SANITIZER)
+				add_link_options(${SANITIZE})
+			endif (MSVC)
+		endif (ENEABLE_SANITIZER)
+
     endif (BUILD_DEBUG)
 
     set (GCC_WARNINGS
