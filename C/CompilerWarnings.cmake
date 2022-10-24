@@ -78,11 +78,6 @@ function(set_target_warnings target)
 	    -Wl,-z,now
 	    -Wl,-z,noexecstack
 	    -Wl,-z,separate-code
-
-        -Wold-style-cast # warn for c-style casts
-        -Wnon-virtual-dtor # warn the user if a class with virtual functions has a non-virtual destructor. This helps catch hard to track down memory errors
-        -Woverloaded-virtual # warn if you overload (not override) a virtual function
-        -Wsuggest-override # warn when 'override' could be used on a member function overriding a virtual function
     )
 
     set (CLANG_WARNINGS
@@ -125,11 +120,6 @@ function(set_target_warnings target)
 	    -Wl,-z,now
 	    -Wl,-z,noexecstack
 	    -Wl,-z,separate-code
-
-        -Wold-style-cast # warn for c-style casts
-        -Wnon-virtual-dtor # warn the user if a class with virtual functions has a non-virtual destructor. This helps catch hard to track down memory errors
-        -Woverloaded-virtual # warn if you overload (not override) a virtual function
-        -Wsuggest-override # warn when 'override' could be used on a member function overriding a virtual function
     )
 
     set (MSVC_WARNINGS

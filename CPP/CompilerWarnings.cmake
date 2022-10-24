@@ -33,7 +33,7 @@ function(set_target_warnings target)
                     add_link_options(-fsanitize=address)
         endif (ENEABLE_SANITIZER)
     endif (BUILD_DEBUG)
-	
+
     set (GCC_WARNINGS
 	    -Wall
 	    -Wextra
@@ -77,6 +77,11 @@ function(set_target_warnings target)
 	    -Wl,-z,now
 	    -Wl,-z,noexecstack
 	    -Wl,-z,separate-code
+		
+        -Wold-style-cast # warn for c-style casts
+        -Wnon-virtual-dtor # warn the user if a class with virtual functions has a non-virtual destructor. This helps catch hard to track down memory errors
+        -Woverloaded-virtual # warn if you overload (not override) a virtual function
+        -Wsuggest-override # warn when 'override' could be used on a member function overriding a virtual function
     )
 
     set (CLANG_WARNINGS
@@ -119,6 +124,11 @@ function(set_target_warnings target)
 	    -Wl,-z,now
 	    -Wl,-z,noexecstack
 	    -Wl,-z,separate-code
+
+        -Wold-style-cast # warn for c-style casts
+        -Wnon-virtual-dtor # warn the user if a class with virtual functions has a non-virtual destructor. This helps catch hard to track down memory errors
+        -Woverloaded-virtual # warn if you overload (not override) a virtual function
+        -Wsuggest-override # warn when 'override' could be used on a member function overriding a virtual function
     )
 
     set (MSVC_WARNINGS
@@ -144,13 +154,6 @@ function(set_target_warnings target)
     else()
         message(AUTHOR_WARNING "No compiler warnings set for '${CMAKE_C_COMPILER_ID}' compiler.")
     endif()
-
-    target_compile_options(${target} PRIVATE ${FILE_WARNINGS})
-endfunction()
-
-
-    
-
 
     target_compile_options(${target} PRIVATE ${FILE_WARNINGS})
 endfunction()
