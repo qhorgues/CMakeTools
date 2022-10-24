@@ -35,14 +35,6 @@ function(set_target_warnings target)
         endif (ENEABLE_SANITIZER)
     endif (BUILD_DEBUG)
 
-    if (WARNINGS_AS_ERRORS)
-        if (MSVC)
-            set(ERROR_FLAGS /WX)
-        else
-            set(ERROR_FLAGS -Werror)
-        endif()
-    endif()
-
     set (GCC_WARNINGS
 	    -Wall
 	    -Wextra
