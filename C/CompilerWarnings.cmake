@@ -8,7 +8,7 @@ function(set_target_warnings target)
 
     if (BUILD_DEBUG)
         if (NOT MSVC)
-            set (CMAKE_C_FLAGS_DEBUG -g -O2)
+			set (CMAKE_C_FLAGS_DEBUG "-g -O2" CACHE INTERNAL "debug flags")
         endif (NOT MSVC)
 
 		if (ENEABLE_SANITIZER)
