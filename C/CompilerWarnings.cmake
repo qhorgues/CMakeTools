@@ -42,7 +42,7 @@ function(set_target_warnings target)
 	    -Wformat=2
 	    -Wformat-overflow=2
 	    -Wformat-truncation=2
-	    -Wformat=security
+	    -Wformat-security
 	    -Wnull-dereference
 	    -Wstack-protector
 	    -Wtrampolines
@@ -85,7 +85,7 @@ function(set_target_warnings target)
 	    -Wcast-qual
 	    -Wconversion
 	    -Wformat=2
-	    -Wformat=security
+	    -Wformat-security
 	    -Wnull-dereference
 	    -Wstack-protector
 	    -Wvla
