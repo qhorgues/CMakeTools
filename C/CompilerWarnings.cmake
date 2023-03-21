@@ -13,29 +13,28 @@ function(set_target_warnings target)
 
 			if (ENEABLE_SANITIZER)
 				if (MSVC)
-					set(SANITIZE /fsanitize=address /analyse)
+					list (APPEND CMAKE_EXE_LINKER_FLAGS /fsanitize=address /analyse)
 				else()
 
 					set(SANITIZE 
 						-fsanitize=address
 						-fsanitize=pointer-compare
-						-fsanitize=pointer-substract
+						-fsanitize=pointer-subtract
 						-fsanitize=leak
-						-fsanitize=no-omit-frame-pointer
 						-fsanitize=undefined
 						-fsanitize=bounds-strict
 						-fsanitize=float-divide-by-zero
 						-fsanitize=float-cast-overflow
-						-fanalyser
+						-fanalyzer
 					)
 
-					add_link_options(${SANITIZE})
+					list (APPEND CMAKE_EXE_LINKER_FLAGS ${SANITIZE})
 				endif (MSVC)
 			endif (ENEABLE_SANITIZER)
 
 		endif (BUILD_DEBUG)
 	else ()
-		add_link_options(-fstack-protector -lssp)
+		list (APPEND CMAKE_EXE_LINKER_FLAGS -fstack-protector -lssp)
 	endif (NOT MINGW)
 
 	if (NOT MINGW)
@@ -148,5 +147,6 @@ function(set_target_warnings target)
         message(AUTHOR_WARNING "No compiler warnings set for '${CMAKE_C_COMPILER_ID}' compiler.")
     endif()
 
-    target_compile_options(${target} PRIVATE ${FILE_WARNINGS})
+    target_compile_options(${target} PRIVATE ${FILE_WARNINGS} ${SANITIZE})
+	
 endfunction()
