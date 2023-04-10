@@ -35,15 +35,13 @@ endfunction (set_sanitizer)
 
 function(set_target_warnings target)
     option(WARNINGS_AS_ERRORS "Treat compiler warnings as errors" TRUE)
-    
-	
 
-		if (NOT MINGW)
-			set (FORTIFY -D_FORTIFY_SOURCE=2 -fstack-protector-strong -fstack-clash-protection -fPIE)
-	    if (NOT MSVC)
-				set (CMAKE_CXX_FLAGS_DEBUG "-g -O2" CACHE INTERNAL "debug flags")
-			endif (NOT MSVC)
-		endif (NOT MINGW)
+	if (NOT MINGW)
+		set (FORTIFY -D_FORTIFY_SOURCE=2 -fstack-protector-strong -fstack-clash-protection -fPIE)
+		if (NOT MSVC)
+			set (CMAKE_CXX_FLAGS_DEBUG "-g -O2" CACHE INTERNAL "debug flags")
+		endif (NOT MSVC)
+	endif (NOT MINGW)
 
     set (GCC_WARNINGS
 	    -Wall
