@@ -1,6 +1,4 @@
-function(set_target_warnings target)
-    option(WARNINGS_AS_ERRORS "Treat compiler warnings as errors" TRUE)
-    
+function (set_sanitizer)
 	if (NOT MINGW)
 		option(ENEABLE_SANITIZER "Use sanitizer in Debug and RelWithDebInfo build type" TRUE)
 		set(BUILD_DEBUG (${CMAKE_BUILD_TYPE} MATCHES "Debug") OR (${CMAKE_BUILD_TYPE} MATCHES "RelWithDebInfo" ) ) 
@@ -33,8 +31,15 @@ function(set_target_warnings target)
 
 		endif (BUILD_DEBUG)
 	else ()
-		add_link_options(-fstack-protector -lssp)
+	list (APPEND CMAKE_EXE_LINKER_FLAGS -fstack-protector -lssp)
 	endif (NOT MINGW)
+endfunction (set_sanitizer)
+
+
+function(set_target_warnings target)
+    option(WARNINGS_AS_ERRORS "Treat compiler warnings as errors" TRUE)
+    
+	
 
 	if (NOT MINGW)
 		set (FORTIFY -D_FORTIFY_SOURCE=2 -fstack-protector-strong -fstack-clash-protection -fPIE)
@@ -55,7 +60,6 @@ function(set_target_warnings target)
 	    -Wvla
 	    -Warray-bounds=2
 	    -Wimplicit-fallthrough=3
-	    -Wtraditional-conversion
 	    -Wshift-overflow=2
 	    -Wcast-qual
 	    -Wstringop-overflow=4
@@ -68,7 +72,6 @@ function(set_target_warnings target)
 	    -Wshadow
 	    -Wstrict-overflow=4
 	    -Wundef
-	    -Wstrict-prototypes
 	    -Wswitch-default
 	    -Wswitch-enum
 	    -Wstack-usage=1000000
@@ -149,12 +152,12 @@ function(set_target_warnings target)
 
     if(MSVC)
         set(FILE_WARNINGS ${MSVC_WARNINGS})
-    elseif(CMAKE_C_COMPILER_ID MATCHES ".*Clang")
+    elseif(CMAKE_CXX_COMPILER_ID MATCHES ".*Clang")
         set(FILE_WARNINGS ${CLANG_WARNINGS})
-    elseif(CMAKE_C_COMPILER_ID STREQUAL "GNU")
+    elseif(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
         set(FILE_WARNINGS ${GCC_WARNINGS})
     else()
-        message(AUTHOR_WARNING "No compiler warnings set for '${CMAKE_C_COMPILER_ID}' compiler.")
+        message(AUTHOR_WARNING "No compiler warnings set for '${CMAKE_CXX_COMPILER_ID}' compiler.")
     endif()
 
     target_compile_options(${target} PRIVATE ${FILE_WARNINGS} ${SANITIZE})

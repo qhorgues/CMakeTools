@@ -1,7 +1,4 @@
-
-function(set_target_warnings target)
-    option(WARNINGS_AS_ERRORS "Treat compiler warnings as errors" TRUE)
-    
+function (set_sanitizer)
 	if (NOT MINGW)
 		option(ENEABLE_SANITIZER "Use sanitizer in Debug and RelWithDebInfo build type" TRUE)
 		set(BUILD_DEBUG (${CMAKE_BUILD_TYPE} MATCHES "Debug") OR (${CMAKE_BUILD_TYPE} MATCHES "RelWithDebInfo" ) ) 
@@ -34,8 +31,15 @@ function(set_target_warnings target)
 
 		endif (BUILD_DEBUG)
 	else ()
-		list (APPEND CMAKE_EXE_LINKER_FLAGS -fstack-protector -lssp)
+	list (APPEND CMAKE_EXE_LINKER_FLAGS -fstack-protector -lssp)
 	endif (NOT MINGW)
+endfunction (set_sanitizer)
+
+
+function(set_target_warnings target)
+    option(WARNINGS_AS_ERRORS "Treat compiler warnings as errors" TRUE)
+    
+	
 
 	if (NOT MINGW)
 		set (FORTIFY -D_FORTIFY_SOURCE=2 -fstack-protector-strong -fstack-clash-protection -fPIE)
