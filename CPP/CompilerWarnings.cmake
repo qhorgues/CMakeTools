@@ -4,9 +4,6 @@ function (set_sanitizer)
 		set(BUILD_DEBUG (${CMAKE_BUILD_TYPE} MATCHES "Debug") OR (${CMAKE_BUILD_TYPE} MATCHES "RelWithDebInfo" ) ) 
 
 		if (BUILD_DEBUG)
-			if (NOT MSVC)
-				set (CMAKE_C_FLAGS_DEBUG "-g -O2" CACHE INTERNAL "debug flags")
-			endif (NOT MSVC)
 
 			if (ENEABLE_SANITIZER)
 				if (MSVC)
@@ -31,7 +28,7 @@ function (set_sanitizer)
 
 		endif (BUILD_DEBUG)
 	else ()
-	list (APPEND CMAKE_EXE_LINKER_FLAGS -fstack-protector -lssp)
+		list (APPEND CMAKE_EXE_LINKER_FLAGS -fstack-protector -lssp)
 	endif (NOT MINGW)
 endfunction (set_sanitizer)
 
@@ -41,9 +38,12 @@ function(set_target_warnings target)
     
 	
 
-	if (NOT MINGW)
-		set (FORTIFY -D_FORTIFY_SOURCE=2 -fstack-protector-strong -fstack-clash-protection -fPIE)
-	endif (NOT MINGW)
+		if (NOT MINGW)
+			set (FORTIFY -D_FORTIFY_SOURCE=2 -fstack-protector-strong -fstack-clash-protection -fPIE)
+	    if (NOT MSVC)
+				set (CMAKE_CXX_FLAGS_DEBUG "-g -O2" CACHE INTERNAL "debug flags")
+			endif (NOT MSVC)
+		endif (NOT MINGW)
 
     set (GCC_WARNINGS
 	    -Wall
