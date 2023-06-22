@@ -23,6 +23,7 @@ function (set_sanitizer)
 					)
 
 					list (APPEND CMAKE_EXE_LINKER_FLAGS ${SANITIZE})
+					add_link_options(${SANITIZE})
 				endif (MSVC)
 			endif (ENEABLE_SANITIZER)
 
