@@ -38,8 +38,32 @@ function(set_target_warnings target)
     
 	if (NOT MINGW)
 		set (FORTIFY -D_FORTIFY_SOURCE=2 -fstack-protector-strong -fstack-clash-protection -fPIE)
+		option(ENEABLE_SANITIZER "Use sanitizer in Debug and RelWithDebInfo build type" TRUE)
+		set(BUILD_DEBUG (${CMAKE_BUILD_TYPE} MATCHES "Debug") OR (${CMAKE_BUILD_TYPE} MATCHES "RelWithDebInfo" ) ) 
+
+		if (BUILD_DEBUG)
+
+			if (ENEABLE_SANITIZER)
+				if (NOT MSVC)
+					set(SANITIZE 
+						-fsanitize=address
+						-fsanitize=pointer-compare
+						-fsanitize=pointer-subtract
+						-fsanitize=leak
+						-fsanitize=undefined
+						-fsanitize=bounds-strict
+						-fsanitize=float-divide-by-zero
+						-fsanitize=float-cast-overflow
+						-fanalyzer
+					)
+
+				endif (NOT MSVC)
+			endif (ENEABLE_SANITIZER)
+
+		endif (BUILD_DEBUG)
 		if (NOT MSVC)
 			set (CMAKE_C_FLAGS_DEBUG "-g -O2" CACHE INTERNAL "debug flags")
+			
 		endif (NOT MSVC)
 	endif (NOT MINGW)
 
@@ -148,7 +172,7 @@ function(set_target_warnings target)
     else()
         message(AUTHOR_WARNING "No compiler warnings set for '${CMAKE_C_COMPILER_ID}' compiler.")
     endif()
-
+	
     target_compile_options(${target} PRIVATE ${FILE_WARNINGS} ${SANITIZE})
 	
 endfunction()
