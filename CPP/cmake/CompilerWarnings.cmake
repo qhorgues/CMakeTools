@@ -1,10 +1,8 @@
 function (set_sanitizer)
-	if (NOT MINGW)
-		option(ENEABLE_SANITIZER "Use sanitizer in Debug and RelWithDebInfo build type" TRUE)
-		set(BUILD_DEBUG (${CMAKE_BUILD_TYPE} MATCHES "Debug") OR (${CMAKE_BUILD_TYPE} MATCHES "RelWithDebInfo" ) ) 
-
-		if (BUILD_DEBUG)
-
+	if (NOT MINGW)		
+		if ((${CMAKE_BUILD_TYPE} MATCHES "Debug") OR (${CMAKE_BUILD_TYPE} MATCHES "RelWithDebInfo" ))
+		
+			option(ENEABLE_SANITIZER "Use sanitizer in Debug and RelWithDebInfo build type" TRUE)
 			if (ENEABLE_SANITIZER)
 				if (MSVC)
 					list (APPEND CMAKE_EXE_LINKER_FLAGS /fsanitize=address /analyse)
@@ -23,10 +21,11 @@ function (set_sanitizer)
 					)
 
 					list (APPEND CMAKE_EXE_LINKER_FLAGS ${SANITIZE})
+					add_link_options(${SANITIZE})
 				endif (MSVC)
 			endif (ENEABLE_SANITIZER)
 
-		endif (BUILD_DEBUG)
+		endif ()
 	else ()
 		list (APPEND CMAKE_EXE_LINKER_FLAGS -fstack-protector -lssp)
 	endif (NOT MINGW)
@@ -36,11 +35,32 @@ endfunction (set_sanitizer)
 function(set_target_warnings target)
     option(WARNINGS_AS_ERRORS "Treat compiler warnings as errors" TRUE)
 
-	if (NOT MINGW)
-		set (FORTIFY -D_FORTIFY_SOURCE=2 -fstack-protector-strong -fstack-clash-protection -fPIE)
-		if (NOT MSVC)
-			set (CMAKE_CXX_FLAGS_DEBUG "-g -O2" CACHE INTERNAL "debug flags")
-		endif (NOT MSVC)
+	if (NOT MINGW)		
+		if ((${CMAKE_BUILD_TYPE} MATCHES "Debug") OR (${CMAKE_BUILD_TYPE} MATCHES "RelWithDebInfo" ))
+			
+			option(ENEABLE_SANITIZER "Use sanitizer in Debug and RelWithDebInfo build type" TRUE)
+			if (ENEABLE_SANITIZER)
+				message(STATUS "Sanitizer active ${BUILD_DEBUG}")
+				if (NOT MSVC)
+					set(SANITIZE 
+						-fsanitize=address
+						-fsanitize=pointer-compare
+						-fsanitize=pointer-subtract
+						-fsanitize=leak
+						-fsanitize=undefined
+						-fsanitize=bounds-strict
+						-fsanitize=float-divide-by-zero
+						-fsanitize=float-cast-overflow
+						-fanalyzer
+						)	
+				elseif (NOT MSVC)		
+					set (FORTIFY -D_FORTIFY_SOURCE=2 -fstack-protector-strong -fstack-clash-protection -fPIE)
+					set (CMAKE_C_FLAGS_DEBUG "-g -O2" CACHE INTERNAL "debug flags")
+				endif (NOT MSVC)
+			endif (ENEABLE_SANITIZER)
+		else()
+			set(SANITIZE "")
+		endif ()
 	endif (NOT MINGW)
 
     set (GCC_WARNINGS
@@ -68,7 +88,7 @@ function(set_target_warnings target)
 	    -Wduplicated-branches
 	    -Wformat-signedness
 	    -Wshadow
-	    -Wstrict-overflow=4
+	    -Wstrict-overflow=4 # 2
 	    -Wundef
 	    -Wswitch-default
 	    -Wswitch-enum
