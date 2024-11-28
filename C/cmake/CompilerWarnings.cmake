@@ -78,7 +78,6 @@ function(set_target_warnings target)
 	    -Wvla
 	    -Warray-bounds=2
 	    -Wimplicit-fallthrough=3
-	    -Wtraditional-conversion
 	    -Wshift-overflow=2
 	    -Wcast-qual
 	    -Wstringop-overflow=4
